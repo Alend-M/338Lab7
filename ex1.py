@@ -40,24 +40,26 @@ def calculate_balance(node):
         return 0
     return abs(calculate_height(node.left) - calculate_height(node.right))
 
-# Generate 1000 random search tasks
 integers_list = list(range(1, 1001))
 search_tasks = [random.sample(integers_list, len(integers_list)) for _ in range(1000)]
 
 search_times = []
 max_balances = []
 
-for task in search_tasks:
-    root = Node(task[0])  # Initialize the tree with the first element of each task
-    for num in task[1:]:
-        root.insert(num)  # Insert all other elements into the tree
-    
-    start_time = timeit.default_timer()
-    for num in integers_list:
-        root.search(num)  # Search for each integer in the tree
-    search_times.append(timeit.default_timer() - start_time)
+def searchTest(root, num):
+     root.search(num)  
 
-    # Measure maximum balance in the tree
+for task in search_tasks:
+    root = Node(task[0])  
+    for num in task[1:]:
+        root.insert(num)
+
+    temp = 0
+    for i in integers_list:
+        temp += (timeit.timeit(lambda: searchTest(root, i), number=1))
+    temp /= len(integers_list)
+    search_times.append(temp)
+        
     max_balance = 0
     queue = [root]
     while queue:
