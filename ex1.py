@@ -3,98 +3,66 @@ import timeit
 import matplotlib.pyplot as plt
 
 class Node:
-    def __init__(self, data, parent=None, left=None, right=None):
-        self.parent = parent
+    def __init__(self, data):
         self.data = data
-        self.left = left
-        self.right = right
-        self.balance = 0
+        self.left = None
+        self.right = None
 
-    def calculate_balance(self):
-        return abs(self.calculate_height(self.left) - self.calculate_height(self.right))
-
-    def calculate_height(self, node):
-        if node is None:
-            return 0
-        return 1 + max(self.calculate_height(node.left), self.calculate_height(node.right))
-
-    def insert(self, data, root=None):
-        current = root
-        parent = None
-
-        while current is not None:
-            parent = current
-            if data <= current.data:
-                current = current.left
+    def insert(self, data):
+        if data <= self.data:
+            if self.left is None:
+                self.left = Node(data)
             else:
-                current = current.right
-
-        newnode = Node(data, parent)    
-        if root is None:
-            root = newnode
-        elif data <= parent.data:
-            parent.left = newnode
+                self.left.insert(data)
         else:
-            parent.right = newnode
-        return newnode
-
-    def inorder(self, root):
-        if root is not None:
-            self.inorder(root.left)
-            print(root.data)
-            self.inorder(root.right)
-
-    
-    def preorder(self, root):
-        if root is not None:
-            print(root.data)
-            self.preorder(root.left)
-            self.preorder(root.right)
-
-    
-    def postorder(self, root):
-        if root is not None:
-            self.postorder(root.left)
-            self.postorder(root.right)
-            print(root.data)
-
-    def search(self, data, root=None):
-        current = root if root else self
-        while current is not None:
-            if data == current.data:
-                return current
-            elif data <= current.data:
-                current = current.left
+            if self.right is None:
+                self.right = Node(data)
             else:
-                current = current.right
-        return None
+                self.right.insert(data)
 
+    def search(self, data):
+        if data == self.data:
+            return self
+        elif data < self.data and self.left is not None:
+            return self.left.search(data)
+        elif data > self.data and self.right is not None:
+            return self.right.search(data)
+        else:
+            return None
 
-#change back to 1001 
-integers_list = [random.randint(0, 1000) for _ in range(1000)]
+def calculate_height(node):
+    if node is None:
+        return 0
+    return 1 + max(calculate_height(node.left), calculate_height(node.right))
 
-#Change it back to 1000
+def calculate_balance(node):
+    if node is None:
+        return 0
+    return abs(calculate_height(node.left) - calculate_height(node.right))
+
+# Generate 1000 random search tasks
+integers_list = list(range(1, 1001))
 search_tasks = [random.sample(integers_list, len(integers_list)) for _ in range(1000)]
 
 search_times = []
 max_balances = []
 
-root = Node(integers_list[0])
 for task in search_tasks:
-    for num in integers_list[1:]:
-        node = root.insert(num)
+    root = Node(task[0])  # Initialize the tree with the first element of each task
+    for num in task[1:]:
+        root.insert(num)  # Insert all other elements into the tree
+    
     start_time = timeit.default_timer()
-    for num in task:
-        root.search(num)
+    for num in integers_list:
+        root.search(num)  # Search for each integer in the tree
     search_times.append(timeit.default_timer() - start_time)
 
-#TODO: FIX the measure the balance please and thank you alend
-    # Measure balance for each node
+    # Measure maximum balance in the tree
     max_balance = 0
     queue = [root]
     while queue:
         node = queue.pop(0)
-        balance = node.calculate_balance()
+        balance = calculate_balance(node)
         if balance > max_balance:
             max_balance = balance
         if node.left:
