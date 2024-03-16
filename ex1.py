@@ -8,15 +8,15 @@ class Node:
         self.data = data
         self.left = left
         self.right = right
-        self.balance = 0 
+        self.balance = 0
 
     def calculate_balance(self):
-        def height(node):
-            if node is None:
-                return 0
-            return 1 + max(height(node.left), height(node.right))
+        return abs(self.calculate_height(self.left) - self.calculate_height(self.right))
 
-        return height(self.left) - height(self.right)
+    def calculate_height(self, node):
+        if node is None:
+            return 0
+        return 1 + max(self.calculate_height(node.left), self.calculate_height(node.right))
 
     def insert(self, data, root=None):
         current = root
@@ -36,10 +36,8 @@ class Node:
             parent.left = newnode
         else:
             parent.right = newnode
-
         return newnode
 
-    
     def inorder(self, root):
         if root is not None:
             self.inorder(root.left)
@@ -73,7 +71,7 @@ class Node:
 
 
 #change back to 1001 
-integers_list = list(range(1, 1001))
+integers_list = [random.randint(0, 1000) for _ in range(1000)]
 
 #Change it back to 1000
 search_tasks = [random.sample(integers_list, len(integers_list)) for _ in range(1000)]
@@ -81,12 +79,8 @@ search_tasks = [random.sample(integers_list, len(integers_list)) for _ in range(
 search_times = []
 max_balances = []
 
-def searchBinary(task):
-    print("nothing")
-
 root = Node(integers_list[0])
 for task in search_tasks:
-    root = Node(integers_list[0])
     for num in integers_list[1:]:
         node = root.insert(num)
     start_time = timeit.default_timer()
@@ -97,16 +91,16 @@ for task in search_tasks:
 #TODO: FIX the measure the balance please and thank you alend
     # Measure balance for each node
     max_balance = 0
-    stack = [root]
-    while stack:
-        node = stack.pop()
-        balance = abs(node.calculate_balance())
+    queue = [root]
+    while queue:
+        node = queue.pop(0)
+        balance = node.calculate_balance()
         if balance > max_balance:
             max_balance = balance
         if node.left:
-            stack.append(node.left)
+            queue.append(node.left)
         if node.right:
-            stack.append(node.right)
+            queue.append(node.right)
     max_balances.append(max_balance)
 
 # Generate scatterplot
