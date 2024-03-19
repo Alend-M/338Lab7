@@ -110,6 +110,24 @@ if __name__ == "__main__":
 
 
 
+#feels wrong somehow
+'''Output: 
 
+Inserted 5 to the left of 10
+Case #2: A pivot exists, and a node was added to the shorter subtree:
+Inserted 15 to the right of 10
+Case #1: Pivot not detected:
+Inserted 4 to the left of 5
+Case #2: A pivot exists, and a node was added to the shorter subtree:
+Inserted 3 to the left of 4
+Inserted 20 to the right of 15
+Case #2: A pivot exists, and a node was added to the shorter subtree:
+Inserted 21 to the right of 20
+Case #1: Pivot not detected:
+Inserted 22 to the right of 21
+Case 3 not supported:
+Inserted 23 to the right of 22
+
+'''
 
 
