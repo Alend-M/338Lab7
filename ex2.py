@@ -3,20 +3,31 @@ class Node:
         self.data = data
         self.left = None
         self.right = None
+        self.balance = 0
 
     def insert(self, data):
         if data <= self.data:
             if self.left is None:
                 self.left = Node(data)
-                return self.left #Return the node you just inserted
+                self.left.cases_and_balance()
+                return self.left
             else:
-                return self.left.insert(data)  # Recursively insert and return the node
+                #print/return it so that we're 'identifying' the pivot node
+                #print(self.left.cases_and_balance())
+                return self.left.insert(data)
+
+
         else:
             if self.right is None:
                 self.right = Node(data)
-                return self.right # Return the node you just inserted
+                self.right.cases_and_balance()
+                
+                return self.right
             else:
-                return self.right.insert(data)  # Recursively insert and return the node
+                #print(self.right.cases_and_balance())
+                return self.right.insert(data)
+  
+        
 
     def search(self, data):
         if data == self.data:
@@ -28,34 +39,54 @@ class Node:
         else:
             return None
 
-    def calculate_height(node):
-        if node is None:
-            return 0
-        return 1 + max(calculate_height(node.left), calculate_height(node.right))
+    def cases_and_balance(self):
+        left_height = calculate_height(self.left)
+        right_height = calculate_height(self.right)
 
-    def calculate_balance(node):
-        if node is None:
-            return 0
-        return abs(calculate_height(node.left) - calculate_height(node.right))
-    
-    def update_balance(self):
-        if self is None:
-            return
-        left_height = self.left.calculate_height() if self.left else 0
-        right_height = self.right.calculate_height() if self.right else 0
-        self.balance = right_height - left_height
+        if abs(left_height - right_height) <= 1:
+            self.balance = max(left_height, right_height) + 1
+            return self
+        elif left_height > right_height:
+            print("Case #2: A pivot exists, and a node was added to the shorter subtree")
+            self.balance = max(left_height, right_height) + 1
+            return self
+        elif left_height < right_height:
+            print("Case 3 not supported")
 
-        if abs(self.balance) > 1:
-            print("Case #{}: A pivot exists, and a node was added to the shorter subtree".format(2 if self.balance < 0 else 1))
-    
-    def pivot_check_insert(self, data):
-        node, parent = self.insert(data)
-        if node is None:
-            print("Case #1: Pivot not detected")
         else:
-            print("Newly inserted node:", node.data)
-            print("Parent node:", parent.data)
-            print("Balance of pivot node:", node.calculate_balance())
+            print("Case #1: Pivot not detected")
+            self.balance = max(left_height, right_height) + 1
+        
+        return self
 
+
+def calculate_height(node):
+    if node is None:
+        return 0
+    return 1 + max(calculate_height(node.left), calculate_height(node.right))
+
+def calculate_balance(node):
+    if node is None:
+        return 0
+    return abs(calculate_height(node.left) - calculate_height(node.right))
 
 ''' a pivot node is the node where a new node is inserted during the insertion operation'''
+#Main code:
+
+root = Node(10)
+print("Initial Tree:")
+print("Root:", root.data)
+
+print("\nTest Case 1")
+root.insert(5)
+root.insert(15)
+root.insert(3)
+root.insert(7)
+# No pivot node exists
+print("\nTest Case 2")
+root.insert(2)
+# Node 2 is inserted into the shorter subtree (left subtree of 3)
+print("\nTest Case 3")
+root.insert(20)
+# Node 20 is inserted into the longer subtree (right subtree of 15)
+
