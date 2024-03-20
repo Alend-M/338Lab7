@@ -1,24 +1,6 @@
 
 
 # ''' a pivot node is the node where a new node is inserted during the insertion operation'''
-# #Main code:
-
-# root = Node(10)
-# print("Initial Tree:")
-# print("Root:", root.data)
-
-# print("\nTest Case 1")
-# root.insert(5)
-# root.insert(15)
-# root.insert(3)
-# root.insert(7)
-# # No pivot node exists
-# print("\nTest Case 2")
-# root.insert(2)
-# # Node 2 is inserted into the shorter subtree (left subtree of 3)
-# print("\nTest Case 3")
-# root.insert(20)
-# # Node 20 is inserted into the longer subtree (right subtree of 15)
 
 
 class Node:
