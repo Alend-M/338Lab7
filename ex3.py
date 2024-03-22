@@ -5,21 +5,38 @@ class Node:
         self.data = data
         self.left = None
         self.right = None
+        self.height = 1
         self.balance = 0
 
+class Tree:
+    def __init__(self):
+        self.root = None
+
     def insert(self, data):
-        if data <= self.data:
-            if self.left is None:
-                self.left = Node(data)
-                print(f"Inserted {data} to the left of {self.data}")
+        def insert_helper(node, data):
+            if node is None:
+                return Node(data)
+            if data < node.data:
+                node.left = insert_helper(node.left, data)
             else:
-                self.left.insert(data)
-        else:
-            if self.right is None:
-                self.right = Node(data)
-                print(f"Inserted {data} to the right of {self.data}")
-            else:
-                self.right.insert(data)
+                node.right = insert_helper(node.right, data)
+            node.balance = max(calculate_height(node.left), calculate_height(node.right)) + 1
+            balance = calculate_balance(node)
+            if balance > 1:
+                if data < node.left.data:
+                    return self._right_rotate(node)
+                else:
+                    print("Case 3a: adding a node to an outside subtree")
+                    node.left = self._left_rotate(node.left)
+                    return self._right_rotate(node)
+            elif balance < -1:
+                if data > node.right.data:
+                    return self._left_rotate(node)
+                else:
+                    print("Case 3b not supported.")
+                    return self._right_rotate(node)
+            return node
+        self.root = insert_helper(self.root, data)
 
     def search(self, data):
         if data == self.data:
@@ -30,31 +47,6 @@ class Node:
             return self.right.search(data)
         else:
             return None
-
-    def cases_and_balance(self, root, data):
-        left_height = calculate_height(self.left)
-        right_height = calculate_height(self.right)
-
-        if (left_height - right_height) == 0:
-            print("Case #1: Pivot not detected:")
-            self.insert(data)
-            self.balance = max(calculate_height(self.left), calculate_height(self.right)) + 1  #max() finds the largest value btwn the arguments, returns r or l, whichever is higher
-            return self
-
-        elif (left_height - right_height) == 1:
-            print("Case #2: A pivot exists, and a node was added to the shorter subtree:")
-            self.insert(data)
-            self.balance = max(calculate_height(self.left), calculate_height(self.right)) + 1
-            return self
-
-        elif (left_height - right_height) > 1 and (data < root.left.data):
-            print("Case 3a: adding a node to an outside subtree")
-            self.insert(data)
-            self._right_rotate()
-            return self
-        else: 
-            print("Case 3b not supported")
-            return self
     
     def _left_rotate(self, x):
         y = x.right
@@ -63,8 +55,8 @@ class Node:
         y.left = x
         x.right = t2
 
-        x.height = 1 + max(self._height(x.left), self._height(x.right))
-        y.height = 1 + max(self._height(y.left), self._height(y.right))
+        x.height = 1 + max(calculate_height(x.left), calculate_height(x.right))
+        y.height = 1 + max(calculate_height(y.left), calculate_height(y.right))
 
         return y
 
@@ -75,8 +67,8 @@ class Node:
         y.right = x
         x.left = t2
 
-        x.height = 1 + max(self._height(x.left), self._height(x.right))
-        y.height = 1 + max(self._height(y.left), self._height(y.right))
+        x.height = 1 + max(calculate_height(x.left), calculate_height(x.right))
+        y.height = 1 + max(calculate_height(y.left), calculate_height(y.right))
 
         return y
 
@@ -88,12 +80,11 @@ def calculate_height(node):
 def calculate_balance(node):
     if node is None:
         return 0
-    return abs(calculate_height(node.left) - calculate_height(node.right))
+    return calculate_height(node.left) - calculate_height(node.right)
 
 
 if __name__ == "__main__":
-    tree = Node(0)
-    root = None
-
-    root = tree.cases_and_balance(root, 10) # case 1
-    root = tree.cases_and_balance(root, 25) # case 3b
+    tree = Tree()
+    nodes = [10, 7, 12, 3, 6, 10, 20, 1, 5, 3, 9] # inserting 3 invokes case 3a both times
+    for data in nodes:
+        tree.insert(data)
