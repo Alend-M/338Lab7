@@ -75,26 +75,29 @@ if __name__ == "__main__":
     # Adding a node that results in Case 1:
     test_1 = [5,15,4]
     for i in test_1:
-        root.insert(i)
         root.cases_and_balance()
+        root.insert(i)
 
     # Adding a node that results in Case 2:
     test_2 = [3,20]
     for i in test_2:
-        root.insert(i)
         root.cases_and_balance()
+        root.insert(i)
+        
 
     # Adding a node that results in Case 3 (on the last one)
     test_3 = [21,22,23]
     for i in test_3:
-        root.insert(i)
         root.cases_and_balance()
+        root.insert(i)
+  
 
 
 
-#feels wrong somehow
+
 '''Output: 
 
+Case #1: Pivot not detected:
 Inserted 5 to the left of 10
 Case #2: A pivot exists, and a node was added to the shorter subtree:
 Inserted 15 to the right of 10
