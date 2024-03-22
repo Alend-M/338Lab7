@@ -85,6 +85,6 @@ def calculate_balance(node):
 
 if __name__ == "__main__":
     tree = Tree()
-    nodes = [10, 7, 12, 3, 6, 10, 20, 1, 5, 3, 9] # inserting 3 invokes case 3a both times
+    nodes = [10, 7, 12, 3, 6, 10, 20, 1, 5, 3, 9] # inserting 3 invokes case 3a
     for data in nodes:
         tree.insert(data)
