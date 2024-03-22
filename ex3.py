@@ -13,13 +13,13 @@ class Tree:
         self.root = None
 
     def insert(self, data):
-        def insert_helper(node, data):
+        def _insert(node, data):
             if node is None:
                 return Node(data)
             if data < node.data:
-                node.left = insert_helper(node.left, data)
+                node.left = _insert(node.left, data)
             else:
-                node.right = insert_helper(node.right, data)
+                node.right = _insert(node.right, data)
             node.balance = max(calculate_height(node.left), calculate_height(node.right)) + 1
             balance = calculate_balance(node)
             if balance > 1:
@@ -36,7 +36,7 @@ class Tree:
                     print("Case 3b not supported.")
                     return self._right_rotate(node)
             return node
-        self.root = insert_helper(self.root, data)
+        self.root = _insert(self.root, data)
 
     def search(self, data):
         if data == self.data:
